@@ -11,7 +11,9 @@ export class Stack {
 
     pop(): any {
         if (!this.length) throw new Error('Stack is empty')
-
+        
+        this.length--
+        
         return this.list.remove(0)
     }
 
