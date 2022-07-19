@@ -29,3 +29,12 @@ it('maintains correct size', () => {
     expect(first).toBe(2)
     expect(second).toBe(1)
 })
+
+it('can peek properly', () => {
+    // When
+    const val = queue.peek()
+
+    // Then
+    expect(val).toBe(33)
+    expect(queue.size()).toBe(2)
+})
