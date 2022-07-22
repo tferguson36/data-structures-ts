@@ -1,7 +1,7 @@
 import { LinkedList } from '../linked-list/LinkedList';
 
 export class Queue {
-    list = new LinkedList()
+    private list = new LinkedList()
     private length = 0
 
     peek(): any {
