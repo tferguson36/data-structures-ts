@@ -2,6 +2,8 @@ export function mergeSort(arr: number[]): void {
     const sorted = doMergeSort(arr)
     arr.splice(0, arr.length)
     arr.push(...sorted)
+    
+    // doMergeSortInPlace(arr, [], 0, arr.length - 1)
 }
 
 function doMergeSort(arr: number[]): number[] {
@@ -37,47 +39,49 @@ export function merge(left: number[], right: number[]) {
     return merged
 }
 
-function doMergeSortInPlace(arr: number[], left: number, right: number): void {
+function doMergeSortInPlace(arr: number[], temp: number[], left: number, right: number): void {
     
     if (left >= right) return
-
-    console.log(left, right, Math.floor((right - left) / 2))
 
     const middleAdd = Math.floor((right - left) / 2)
     const middle = left + middleAdd
     
     // split in half, then merge
-    doMergeSortInPlace(arr, left, middle)
-    doMergeSortInPlace(arr, middle + 1, right)
-    mergeInPlace(arr, left, middle, right)
+    doMergeSortInPlace(arr, temp, left, middle)
+    doMergeSortInPlace(arr, temp, middle + 1, right)
+    mergeInPlace(arr, temp, left, middle, right)
 }
 
-function mergeInPlace(arr: number[], left: number, middle: number, right: number): void {
+function mergeInPlace(arr: number[], temp: number[], left: number, middle: number, right: number): void {
     let i = left
     let j = middle + 1
     let k = left
 
     while (i <= middle && j <= right) {
         if (arr[i] <= arr[j]) {
-            arr[k] = arr[i]
+            temp[k] = arr[i]
             i++
         } else {
-            arr[k] = arr[j]
+            temp[k] = arr[j]
             j++
         }
         k++
     }
 
     while (i <= middle) {
-        arr[k] = arr[i]
+        temp[k] = arr[i]
         i++
         k++
     }
 
     while (j <= right) {
-        arr[k] = arr[j]
+        temp[k] = arr[j]
         j++
         k++
     }
 
+    // copy over to array
+    for (let n=left; n !== right; n++) {
+        arr[n] = temp[n]
+    }
 }
