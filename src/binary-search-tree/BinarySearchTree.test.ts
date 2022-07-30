@@ -61,6 +61,15 @@ it('prints "PreOrder"', () => {
     expect(arr.join(',')).toBe(expectArr.join(','))
 })
 
+it('prints "DFS" using stack approach', () => {
+    // When
+    const arr = bst.print(BstTraversalStrat.DFS_STACK)
+    const expectArr = [31, 17, 5, 23, 346, 81, 500]
+
+    // Then
+    expect(arr.join(',')).toBe(expectArr.join(','))
+})
+
 it('prints "PostOrder"', () => {
     // When
     const arr = bst.print(BstTraversalStrat.POST_ORDER)
@@ -77,4 +86,27 @@ it('prints "LevelOrder"', () => {
 
     // Then
     expect(arr.join(',')).toBe(expectArr.join(','))
+})
+
+it('finds the height', () => {
+    // When
+    const height = bst.height()
+
+    // Then
+    expect(height).toBe(3)
+})
+
+it('checks for balance', () => {
+    // When
+    const one = bst.isBalanced()
+
+    bst.add(28)
+    bst.add(29)
+    bst.add(30)
+
+    const two = bst.isBalanced()
+
+    // Then
+    expect(one).toBe(true)
+    expect(two).toBe(false)
 })

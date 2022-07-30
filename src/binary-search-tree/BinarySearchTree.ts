@@ -1,13 +1,18 @@
+import { isNotEmittedStatement } from "typescript"
 import { Queue } from "../queue/Queue"
+import { Stack } from "../stack/Stack"
+
 
 export enum BstTraversalStrat {
     PRE_ORDER,
     IN_ORDER,
     POST_ORDER,
-    LEVEL_ORDER
+    LEVEL_ORDER,
+    DFS_STACK
 }
 
 export class BinarySearchTree<T> {
+    
     root?: Node<T>
 
     constructor() {}
@@ -36,10 +41,82 @@ export class BinarySearchTree<T> {
             case BstTraversalStrat.PRE_ORDER: this.order(this.root, arr, traversalStrat); break;
             case BstTraversalStrat.POST_ORDER: this.order(this.root, arr, traversalStrat); break;
             case BstTraversalStrat.LEVEL_ORDER: this.printLevelOrder(arr); break;
+            case BstTraversalStrat.DFS_STACK: this.printDfsStack(arr); break;
             default: throw new Error('Undefined order: ' + traversalStrat)
         }
 
         return arr
+    }
+    
+    isBalanced(): boolean {
+        const stack = new Stack()
+
+        let node = this.root
+        while (node) {
+            if (!this.nodeIsBalanced(node)) {
+                return false
+            }
+
+            node.leftChild && stack.push(node.leftChild)
+            node.rightChild && stack.push(node.rightChild)
+
+            node = stack.size() && stack.pop() || null
+        }
+        return true
+    }
+
+    private nodeIsBalanced(root: Node<T>): boolean {
+        if (!root.leftChild && !root.rightChild) return true
+
+        let leftCount = this.getHeight(root.leftChild)
+        let rightCount = this.getHeight(root.rightChild)
+
+        return Math.abs(rightCount - leftCount) <= 1
+    }
+
+    height(): number {
+        return this.getHeight(this.root)
+    }
+
+    private getHeight(root?: Node<T>): number {
+        let counter = 0
+
+        // enqueue marker at the end of each level
+        const marker = 'END_LEVEL'
+        const queue = new Queue()
+        queue.enqueue(marker)
+        
+        let node = root
+        while (node) {
+            node.leftChild && queue.enqueue(node.leftChild)
+            node.rightChild && queue.enqueue(node.rightChild)
+            
+            const queuedItem = queue.size() && queue.dequeue() || null
+            if (queuedItem === marker) {
+                // increase counter and replace marker at end of queue to demarcate new level
+                counter++
+                node = queue.size() && queue.dequeue() || null
+                queue.enqueue(marker)
+            } else {
+                node = queuedItem
+            }
+        }
+
+        return counter
+    }
+    
+    private printDfsStack(arr: T[]): void {
+        const stack = new Stack()
+        stack.push(this.root)
+
+        let node
+        do {
+            node = stack.pop()
+            arr.push(node.value)
+
+            node.rightChild && stack.push(node.rightChild)
+            node.leftChild && stack.push(node.leftChild)
+        } while (stack.size())
     }
 
     private printLevelOrder(arr: T[]): void {
