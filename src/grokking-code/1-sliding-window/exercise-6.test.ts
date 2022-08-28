@@ -1,3 +1,12 @@
+function removeCharacter(str: string, idx: number, cache: { [key: string]: number }) {
+    const removeChr = str[idx]
+    cache[removeChr] = cache[removeChr] - 1
+
+    if (!cache[removeChr]) {
+        delete cache[removeChr]
+    }
+}
+
 function findLongestSubstr(str: string, maxChar: number): number {
 
     let start = 0
@@ -34,12 +43,4 @@ it('find longest substring with max 3 distinct char', () => {
     expect(findLongestSubstr("cbbebi", 3)).toBe(5)
 })
 
-function removeCharacter(str: string, idx: number, cache: { [key: string]: number }) {
-    const removeChr = str[idx]
-    cache[removeChr] = cache[removeChr] - 1
-
-    if (!cache[removeChr]) {
-        delete cache[removeChr]
-    }
-}
 
